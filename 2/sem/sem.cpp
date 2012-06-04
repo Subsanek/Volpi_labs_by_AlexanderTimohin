@@ -11,9 +11,10 @@
 //В файле одна книга - одна строка, поля отделяются табуляцией (\t)
 
 int lines_num_get();
+void show_menu();
 
 //Файл с базой данных
-char filename[255] = "file.db";
+char filename[255] = "file.db"; 
 
 FILE *fp;
 
@@ -27,6 +28,18 @@ struct book {
 
 int lines_num = lines_num_get(); //Узнаём количество строк
 
+void show_menu() {
+	//Главное меню
+	printf("\nКниг в базе данных: %d\n",lines_num_get());
+	printf("1. Вывести базу данных полностью;\n\
+2. Вывести базу данных, отсортированную по году издания;\n\
+3. Определить автора наибольшего количества книг;\n\
+4. Вывести список книг в заданном диапазаоне шифров;\n\
+5. Добавить новую книгу в базу данных;\n\
+6. Удалить книгу из базы данных;\n\
+7. Сменить файл базы данных;\n\
+0. Выход\n");
+} 
 
 int lines_num_get() {
 	//Функция возвращает количество строк в файле filename
@@ -76,12 +89,15 @@ void author_by_max_books(book *db) {
 
 int main() {
 	int i;
-	printf("%d \n",lines_num);
 	book *db;
 	db = new book[lines_num];
 	get_db(db);
 	for(i = 0; i < lines_num; i++) {
 		printf("%s ",db[i].id);
 	}
+	
+	show_menu();
+	
+	delete [] db;
 	return 0;
 }
