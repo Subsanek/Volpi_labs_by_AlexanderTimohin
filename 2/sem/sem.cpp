@@ -253,7 +253,11 @@ int delete_book(book *db) {
 
 void change_db_file() {
 	//Позволяет выбрать другой файл базы данных
-	
+	char new_filename[255];
+	printf("Введите имя файла или 0 для отмены: ");
+	scanf("%s",new_filename);
+	if(strcmp(new_filename,"0") != 0) //Если операция не отмененеа
+		strcpy(filename,new_filename); //Изменяем глобальную переменную
 }
 
 int main() {
@@ -284,7 +288,13 @@ int main() {
 						db = new book[lines_num];
 						get_db(db);
 						break;
-			case '7': change_db_file(); break;
+			case '7': 
+						delete [] db;
+						change_db_file(); 
+						lines_num = lines_num_get();
+						db = new book[lines_num];
+						get_db(db);
+						break;
 			case '0': break;
 			default: printf("Выбран неверный номер, повторите попытку!"); break;
 		}
