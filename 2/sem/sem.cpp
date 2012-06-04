@@ -7,6 +7,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 //В файле одна книга - одна строка, поля отделяются символом '^'
 
@@ -117,7 +118,34 @@ void get_db(book *db) {
 		printf("\error\n");
 }
 
+void sort_by_year(book *db) {
+	//Сортирует БД по убыванию году издания
+	//Пусть будет пузырёк
+	int i,j;
+	book tmp; //Временная структура
+	for(i = 0; i < lines_num; i++)
+			for(j = 0; j < i; j++) {
+				if(strcmp(db[j].year,db[j+1].year)>0) {
+					tmp = db[j+1];
+					db[j+1] = db[j];
+					db[j] = tmp;
+				}
+			}
+}
 
+void sort_by_id(book *db) {
+	//Возвращаем к кононическому состоянию - отсортированным по шифру
+	int i,j;
+	book tmp; //Временная структура
+	for(i = 0; i < lines_num; i++)
+			for(j = 0; j < i; j++) {
+				if(strcmp(db[j].id,db[j+1].id)>0) {
+					tmp = db[j+1];
+					db[j+1] = db[j];
+					db[j] = tmp;
+				}
+			}
+}
 
 void author_by_max_books(book *db) {
 	//Выводит автора наибольшего количества книг
@@ -129,21 +157,19 @@ int main() {
 	book *db;
 	db = new book[lines_num];
 	get_db(db); //Инициализируем БД
-	
 	do {
 		show_menu();
 		printf("Выберите пункт: ");
-		menu_num = getchar();
+		gets(&menu_num);
 		switch(menu_num) {
 			case '1': print_db(db); break;
+			case '2': sort_by_year(db); print_db(db); sort_by_id(db); break;
 			case '0': break;
-			
 			default: printf("Выбран неверный номер, повторите попытку!"); break;
 		}
 	}
 	while(menu_num != '0'); //Пока не выбран выход из программы
 	
-	
-	delete [] db;
+	delete [] db; //Освобождаем память
 	return 0;
 }
