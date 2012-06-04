@@ -45,9 +45,11 @@ void show_menu() {
 void print_db(book *db) {
 	//Выводим БД полностью, как оно есть в файле
 	int i;
+	printf("----------------------------------------\n");
 	for(i = 0; i < lines_num; i++) {
 		printf("%s %s %s %s\n",db[i].id,db[i].author,db[i].name,db[i].year);
 	}
+	printf("----------------------------------------");
 }
 
 int lines_num_get() {
@@ -150,6 +152,7 @@ void sort_by_id(book *db) {
 void author_by_max_books(book *db) {
 	//Выводит автора наибольшего количества книг
 	
+	printf("Автор наибольшего количества книг:");
 }
 
 int main() {
@@ -164,6 +167,7 @@ int main() {
 		switch(menu_num) {
 			case '1': print_db(db); break;
 			case '2': sort_by_year(db); print_db(db); sort_by_id(db); break;
+			case '3': author_by_max_books(db); break;
 			case '0': break;
 			default: printf("Выбран неверный номер, повторите попытку!"); break;
 		}
