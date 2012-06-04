@@ -151,12 +151,29 @@ void sort_by_id(book *db) {
 
 void author_by_max_books(book *db) {
 	//Выводит автора наибольшего количества книг
-	int i;
-	//int imax = 0;
-	for(i = 0; i < lines_num; i++) {
-		//db[i].author;
+	int i,j;
+	int count[lines_num]; //Сохраняет номер автора
+	int max,imax; //Номер в массиве структур, где найт автора наиб. кол. книг
+	for(i = 0; i < lines_num; i++)
+		count[i] = 0;
+	char current_author[255];
+	
+	for(j = 0; j < lines_num; j++) {
+		strcpy(current_author,db[j].author);
+		for(i = 0; i < lines_num; i++)
+			if(!strcmp(current_author,db[i].author))
+				count[j]++;
 	}
-	printf("Автор наибольшего количества книг:");
+	//Находим номер максимального элемента в массиве count
+	//что также будет номер в массиве структур, где кол. книг. автора максимально
+	imax = 0;
+	max = count[0];
+	for(i = 0; i < lines_num; i++)
+		if(count[i] > max) {
+			max = count[i];
+			imax = i;
+		}
+	printf("Автор наибольшего количества книг: %s",db[imax].author);
 }
 
 void print_by_id(book *db) {
