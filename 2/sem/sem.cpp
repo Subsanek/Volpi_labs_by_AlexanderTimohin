@@ -41,6 +41,14 @@ void show_menu() {
 0. Выход\n");
 } 
 
+void print_db(book *db) {
+	//Выводим БД полностью, как оно есть в файле
+	int i;
+	for(i = 0; i < lines_num; i++) {
+		printf("%s %s %s %s\n",db[i].id,db[i].author,db[i].name,db[i].year);
+	}
+}
+
 int lines_num_get() {
 	//Функция возвращает количество строк в файле filename
 	int lines = 0; //Количество строк в файле
@@ -117,15 +125,24 @@ void author_by_max_books(book *db) {
 }
 
 int main() {
-	int i;
+	char menu_num; //Выбранный пользователем номер меню
 	book *db;
 	db = new book[lines_num];
-	get_db(db);
-	for(i = 0; i < lines_num; i++) {
-		printf("%s %s %s %s\n",db[i].id,db[i].author,db[i].name,db[i].year);
-	}
+	get_db(db); //Инициализируем БД
 	
-	show_menu();
+	do {
+		show_menu();
+		printf("Выберите пункт: ");
+		menu_num = getchar();
+		switch(menu_num) {
+			case '1': print_db(db); break;
+			case '0': break;
+			
+			default: printf("Выбран неверный номер, повторите попытку!"); break;
+		}
+	}
+	while(menu_num != '0'); //Пока не выбран выход из программы
+	
 	
 	delete [] db;
 	return 0;
