@@ -176,7 +176,44 @@ void print_by_id(book *db) {
 
 void add_book(book *db) {
 	//Добавление новой книги в БД
+	int i;
+	int id = lines_num + 1; //Шифр новой книги по умолчанию
+	int change_or_not; //Менять ли шифр книги на пользовательский
+	char author[255],name[255],year[10];
+	printf("Предлагаемый шифр книги: %d. \n\
+Введите 1 если хотите изменить это значение, в противном случае введите 0:  ",id);
+	scanf("%d",&change_or_not);
+	if(change_or_not) {
+		printf("Введите свой шифр книги: ");
+		scanf("%d",&id);
+	}
+	printf("Введите автора книги: ");
+	scanf("%s",author);
+	printf("Введите название книги: ");
+	scanf("%s",name);
+	printf("Введите год выпуска книги: ");
+	scanf("%s",year);
 	
+	fp = fopen(filename,"r");
+	if(fp != NULL) {
+		//Открываем временный файл
+		FILE *tmp;
+		tmp = fopen("temp","w+");
+		//Копируем старые данные
+		for(i = 0; i < lines_num; i++)
+			fprintf(tmp,"%s^%s^%s^%s\n",db[i].id,db[i].author,db[i].name,db[i].year);
+		
+		//Добавляем новую строку
+		fprintf(tmp,"%d^%s^%s^%s\n",id,author,name,year);
+		
+		fclose(fp);
+		fclose(tmp);
+		rename("temp",filename);
+		remove("temp"); //Удаляем временный файл
+		lines_num = lines_num + 1; //Корректируем количество книг
+	}
+	else
+		printf("\nerroe\n");
 }
 
 int delete_book(book *db) {
@@ -234,7 +271,11 @@ int main() {
 			case '2': sort_by_year(db); print_db(db); sort_by_id(db); break;
 			case '3': author_by_max_books(db); break;
 			case '4': sort_by_id(db); print_by_id(db); break;
-			case '5': add_book(db); break;
+			case '5': add_book(db);
+						delete [] db;
+						db = new book[lines_num];
+						get_db(db);
+						break;
 			case '6': 
 						deleted = delete_book(db);
 						if(deleted) //Если удаление прошло успешно
