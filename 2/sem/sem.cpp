@@ -15,7 +15,7 @@ int lines_num_get();
 void show_menu();
 
 //Файл с базой данных
-char filename[255] = "file.db"; 
+char filename[255] = "file.db";
 
 FILE *fp;
 
@@ -151,12 +151,77 @@ void sort_by_id(book *db) {
 
 void author_by_max_books(book *db) {
 	//Выводит автора наибольшего количества книг
-	
+	int i;
+	//int imax = 0;
+	for(i = 0; i < lines_num; i++) {
+		//db[i].author;
+	}
 	printf("Автор наибольшего количества книг:");
+}
+
+void print_by_id(book *db) {
+	//Выводим в заданном диапазоне шифров
+	int i;
+	int start,stop;
+	printf("Начальная граница: ");
+	scanf("%d",&start);
+	printf("Конечная граница: ");
+	scanf("%d",&stop);
+	printf("----------------------------------------\n");
+	for(i = 0; i <= lines_num; i++) {
+		printf("%s %s %s %s\n",db[i].id,db[i].author,db[i].name,db[i].year);
+	}
+	printf("----------------------------------------");
+}
+
+void add_book(book *db) {
+	//Добавление новой книги в БД
+	
+}
+
+int delete_book(book *db) {
+	//Удаление книги из БД
+	char bookid[255]; //Шифр удаляемой книги
+	int i;
+	int deleted; //Номер удаленного элемента
+	printf("Введите шифр удаляемой книги (или 0 для отмены): ");
+	scanf("%s",bookid);
+	if(!strcmp(bookid,"0")) //Если пользователь отменил операцию
+		return -1;
+	fp = fopen(filename,"r");
+	if(fp != NULL) {
+		//Открываем временный файл
+		FILE *tmp;
+		tmp = fopen("temp","w+");
+		for(i = 0; i < lines_num; i++) {
+			if(strcmp(db[i].id,bookid)) {
+				//Если шифр не совпал, то записываем строку в файл
+				fprintf(tmp,"%s^%s^%s^%s\n",db[i].id,db[i].author,db[i].name,db[i].year);
+			}
+			else
+				deleted = i; //Сохраняем номер удаляемого
+		}
+		fclose(fp);
+		fclose(tmp);
+		rename("temp",filename);
+		remove("temp"); //Удаляем временный файл
+		lines_num = lines_num - 1; //Корректируем количество книг
+	}
+	else {
+		printf("\nerroe\n");
+		return -1;
+	}
+	return deleted;
+}
+
+void change_db_file() {
+	//Позволяет выбрать другой файл базы данных
+	
 }
 
 int main() {
 	char menu_num; //Выбранный пользователем номер меню
+	int deleted;
 	book *db;
 	db = new book[lines_num];
 	get_db(db); //Инициализируем БД
@@ -168,6 +233,17 @@ int main() {
 			case '1': print_db(db); break;
 			case '2': sort_by_year(db); print_db(db); sort_by_id(db); break;
 			case '3': author_by_max_books(db); break;
+			case '4': sort_by_id(db); print_by_id(db); break;
+			case '5': add_book(db); break;
+			case '6': 
+						deleted = delete_book(db);
+						if(deleted) //Если удаление прошло успешно
+							printf("Элемент с шифром %d удалён.",deleted);
+						delete [] db;
+						db = new book[lines_num];
+						get_db(db);
+						break;
+			case '7': change_db_file(); break;
 			case '0': break;
 			default: printf("Выбран неверный номер, повторите попытку!"); break;
 		}
