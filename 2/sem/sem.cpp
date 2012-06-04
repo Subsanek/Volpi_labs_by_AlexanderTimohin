@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-//В файле одна книга - одна строка, поля отделяются табуляцией (\t)
+//В файле одна книга - одна строка, поля отделяются символом '^'
 
 int lines_num_get();
 void show_menu();
@@ -65,25 +65,54 @@ void get_db(book *db) {
 	fp = fopen(filename,"r");
 	if(fp != NULL) {
 		for(i = 0; i < lines_num; i++) {
+			//Считываем шифр
 			j = 0;
 			do {
 				c = fgetc(fp);
-				db[i].id[j] = c;
+				if(c != '^') //Чтобы не копировать табуляцию
+					db[i].id[j] = c;
 				j++;
 			}
-			while(c != '\t');
-			db[i].id[j] = '\0';
+			while(c != '^');
+			//Считываем автора
+			j = 0;
+			do {
+				c = fgetc(fp);
+				if(c != '^') //Чтобы не копировать табуляцию
+					db[i].author[j] = c;
+				j++;
+			}
+			while(c != '^');
+			//Считываем название
+			j = 0;
+			do {
+				c = fgetc(fp);
+				if(c != '^') //Чтобы не копировать табуляцию
+					db[i].name[j] = c;
+				j++;
+			}
+			while(c != '^');
+			//Считываем год
+			j = 0;
+			do {
+				c = fgetc(fp);
+				if(c != '\n') //Чтобы не копировать табуляцию
+					db[i].year[j] = c;
+				j++;
+			}
+			while(c != '\n');
 		}
+		
 		fclose(fp);
 	}
 	else
-		printf("\nerror\n");
+		printf("\error\n");
 }
 
 
 
 void author_by_max_books(book *db) {
-	
+	//Выводит автора наибольшего количества книг
 	
 }
 
@@ -93,7 +122,7 @@ int main() {
 	db = new book[lines_num];
 	get_db(db);
 	for(i = 0; i < lines_num; i++) {
-		printf("%s ",db[i].id);
+		printf("%s %s %s %s\n",db[i].id,db[i].author,db[i].name,db[i].year);
 	}
 	
 	show_menu();
