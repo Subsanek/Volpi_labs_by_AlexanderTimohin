@@ -9,15 +9,14 @@
 #include <stdlib.h>
 #include <string.h>
 
-//В файле одна книга - одна строка, поля отделяются символом '^'
-
-int lines_num_get();
-void show_menu();
+//В файле одна книга - одна строка, поля отделяются символом '^
 
 //Файл с базой данных
 char filename[255] = "file.db";
 
 FILE *fp;
+
+int lines_num_get();
 
 //Информация о книге
 struct book {
@@ -194,6 +193,8 @@ void print_by_id(book *db) {
 void add_book(book *db) {
 	//Добавление новой книги в БД
 	int i;
+	char c = '^';
+	int good = 1; //Есть ли сивол разделителя
 	int id = lines_num + 1; //Шифр новой книги по умолчанию
 	int change_or_not; //Менять ли шифр книги на пользовательский
 	char author[255],name[255],year[10];
@@ -211,8 +212,19 @@ void add_book(book *db) {
 	printf("Введите год выпуска книги: ");
 	scanf("%s",year);
 	
+	for(i = 0; i < strlen(author); i++)
+		if(c == author[i])
+			good = 0;
+	for(i = 0; i < strlen(name); i++)
+		if(c == author[i])
+			good = 0;
+	for(i = 0; i < strlen(year); i++)
+		if(c == author[i])
+			good = 0;
+		
+	
 	fp = fopen(filename,"r");
-	if(fp != NULL) {
+	if(fp != NULL && good) {
 		//Открываем временный файл
 		FILE *tmp;
 		tmp = fopen("temp","w+");
