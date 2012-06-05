@@ -14,6 +14,8 @@
 //Файл с базой данных
 char filename[255] = "file.db";
 
+char out;
+
 FILE *fp;
 
 int lines_num_get();
@@ -184,7 +186,7 @@ void print_by_id(book *db) {
 	printf("Конечная граница: ");
 	scanf("%d",&stop);
 	printf("----------------------------------------\n");
-	for(i = 0; i <= lines_num; i++) {
+	for(i = start-1; i <= stop-1; i++) {
 		printf("%s %s %s %s\n",db[i].id,db[i].author,db[i].name,db[i].year);
 	}
 	printf("----------------------------------------");
@@ -327,6 +329,10 @@ int main() {
 			case '0': break;
 			default: printf("Выбран неверный номер, повторите попытку!"); break;
 		}
+		//scanf("%c",&out);
+		system("sleep 100");
+		getchar();
+		system("clear");
 	}
 	while(menu_num != '0'); //Пока не выбран выход из программы
 	
